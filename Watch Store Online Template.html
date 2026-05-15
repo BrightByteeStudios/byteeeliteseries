@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maison Temporel — The Art of Time</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #fafafa; color: #1a1a1a; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    :root {
+      --gold: #b8860b; --gold-light: #d4a017;
+      --fg: #1a1a1a; --bg: #fafafa; --card: #ffffff;
+      --muted: #f4f4f4; --muted-fg: #737373;
+      --border: rgba(0,0,0,0.1); --border-strong: rgba(0,0,0,0.15);
+      --destructive: #dc2626; --radius: 0.5rem;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .font-display { font-family: 'Fraunces', serif; font-weight: 400; }
+    .text-gold { color: var(--gold); }
+    .uppercase { text-transform: uppercase; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* HEADER */
+    #site-header { position: sticky; top: 0; z-index: 100; background: var(--card); border-bottom: 1px solid var(--border); }
+    .header-inner { height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .logo { font-family: 'Fraunces', serif; font-size: 1.15rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--fg); transition: var(--transition); flex-shrink: 0; }
+    .logo:hover { color: var(--gold); }
+    nav.desktop-nav { display: flex; align-items: center; gap: 2.5rem; }
+    nav.desktop-nav a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-fg); transition: var(--transition); }
+    nav.desktop-nav a:hover, nav.desktop-nav a.active { color: var(--gold); }
+    .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .cart-btn { position: relative; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: var(--transition); }
+    .cart-btn:hover { color: var(--gold); background: var(--muted); }
+    .cart-btn svg { width: 20px; height: 20px; }
+    .cart-badge { position: absolute; top: -2px; right: -2px; background: var(--fg); color: var(--card); font-size: 10px; font-weight: 600; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-badge[data-count="0"] { display: none; }
+    .mobile-menu-btn { display: none; width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center; color: var(--fg); transition: var(--transition); }
+    .mobile-menu-btn:hover { color: var(--gold); background: var(--muted); }
+    .mobile-menu-btn svg { width: 20px; height: 20px; }
+    nav.mobile-nav { display: none; background: var(--card); border-top: 1px solid var(--border); padding: 1rem 1.5rem; flex-direction: column; gap: 1rem; }
+    nav.mobile-nav.open { display: flex; }
+    nav.mobile-nav a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-fg); transition: var(--transition); }
+    nav.mobile-nav a:hover { color: var(--gold); }
+    @media (max-width: 767px) { nav.desktop-nav { display: none; } .mobile-menu-btn { display: flex; } }
+
+    /* TOAST */
+    #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
+    .toast { background: var(--fg); color: var(--card); padding: 0.75rem 1.25rem; border-radius: var(--radius); font-size: 0.85rem; font-weight: 500; max-width: 320px; animation: slideIn 0.3s ease forwards; pointer-events: auto; }
+    .toast.info { background: #1a1a2e; }
+    .toast.error { background: var(--destructive); }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-4px); } }
+
+    /* PAGES */
+    .page { display: none; animation: fadePageIn 0.4s ease; }
+    .page.active { display: block; }
+    @keyframes fadePageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* HERO */
+    .hero { position: relative; min-height: 92vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--fg); }
+    .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1600&q=80'); background-size: cover; background-position: center; opacity: 0.28; }
+    .hero-content { position: relative; z-index: 2; text-align: center; padding: 2rem 1.5rem; max-width: 720px; }
+    .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 1.5rem; }
+    .hero-title { font-family: 'Fraunces', serif; font-size: clamp(3rem, 8vw, 5.5rem); line-height: 1.05; color: #fff; margin-bottom: 1.5rem; }
+    .hero-subtitle { color: rgba(255,255,255,0.65); font-size: 1.05rem; max-width: 480px; margin: 0 auto 2.5rem; line-height: 1.7; }
+    .hero-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 6rem; background: linear-gradient(to top, var(--bg), transparent); z-index: 3; }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 2rem; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; border-radius: var(--radius); border: 1px solid; cursor: pointer; transition: var(--transition); font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .btn-outline-white { border-color: rgba(255,255,255,0.4); color: #fff; background: transparent; }
+    .btn-outline-white:hover { background: #fff; color: var(--fg); }
+    .btn-outline { border-color: var(--border-strong); color: var(--fg); background: transparent; }
+    .btn-outline:hover { background: var(--fg); color: var(--card); border-color: var(--fg); }
+    .btn-solid { border-color: var(--fg); color: var(--card); background: var(--fg); }
+    .btn-solid:hover { background: #333; border-color: #333; }
+    .btn-sm { padding: 0.45rem 1rem; font-size: 0.65rem; }
+    .btn-lg { padding: 1rem 2.5rem; font-size: 0.7rem; }
+
+    /* COLLECTIONS STRIP */
+    .collections-strip { background: rgba(244,244,244,0.5); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+    .collections-strip .inner { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; }
+    .collections-strip a { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-fg); transition: var(--transition); }
+    .collections-strip a:hover { color: var(--gold); }
+
+    /* SECTION HEADERS */
+    .section-eyebrow { font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+    .section-title { font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--fg); }
+    .section-header { text-align: center; margin-bottom: 4rem; }
+
+    /* PRODUCT CARDS */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .product-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: var(--transition); cursor: pointer; }
+    .product-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+    .product-card-img { aspect-ratio: 1; overflow: hidden; background: var(--muted); }
+    .product-card-img img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+    .product-card:hover .product-card-img img { transform: scale(1.05); }
+    .product-card-body { padding: 1.25rem; }
+    .product-collection { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted-fg); margin-bottom: 0.35rem; }
+    .product-name { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--fg); transition: var(--transition); }
+    .product-card:hover .product-name { color: var(--gold); }
+    .product-desc { font-size: 0.82rem; color: var(--muted-fg); margin-top: 0.5rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-footer { margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .product-price { font-weight: 500; color: var(--gold); }
+    .badge-sold-out { display: inline-block; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--muted); color: var(--muted-fg); padding: 0.25rem 0.6rem; border-radius: 0.25rem; border: 1px solid var(--border); }
+
+    /* PILLARS */
+    .pillars-section { background: rgba(244,244,244,0.4); border-top: 1px solid var(--border); padding: 6rem 0; }
+    .pillars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 3rem; }
+    .pillar { text-align: center; }
+    .pillar-icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); margin-bottom: 1.25rem; color: var(--gold); }
+    .pillar-icon svg { width: 20px; height: 20px; }
+    .pillar-title { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--fg); margin-bottom: 0.75rem; }
+    .pillar-desc { font-size: 0.82rem; color: var(--muted-fg); line-height: 1.7; }
+
+    /* PAGE HEADER */
+    .page-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 4rem 0; text-align: center; }
+
+    /* CATALOG FILTERS */
+    .filters-bar { position: sticky; top: 64px; z-index: 50; background: rgba(255,255,255,0.97); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+    .filters-inner { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
+    .filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .filter-tab { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.45rem 1rem; border: 1px solid var(--border-strong); border-radius: var(--radius); color: var(--muted-fg); background: transparent; transition: var(--transition); }
+    .filter-tab:hover { color: var(--fg); border-color: var(--fg); }
+    .filter-tab.active { background: var(--fg); color: var(--card); border-color: var(--fg); }
+    .search-wrap { position: relative; width: 100%; max-width: 240px; }
+    .search-wrap svg { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--muted-fg); pointer-events: none; }
+    .search-input { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.25rem; font-size: 0.82rem; font-family: 'DM Sans', sans-serif; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--bg); color: var(--fg); outline: none; transition: var(--transition); }
+    .search-input:focus { border-color: var(--fg); }
+    .search-input::placeholder { color: var(--muted-fg); }
+
+    /* PRODUCT DETAIL */
+    .breadcrumb { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+    .breadcrumb-inner { display: flex; align-items: center; gap: 0.5rem; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-fg); }
+    .breadcrumb-inner a { transition: var(--transition); }
+    .breadcrumb-inner a:hover { color: var(--gold); }
+    .breadcrumb-inner .current { color: var(--fg); }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    @media (max-width: 767px) { .detail-grid { grid-template-columns: 1fr; gap: 2rem; } }
+    .detail-image { aspect-ratio: 1; background: var(--muted); border-radius: var(--radius); overflow: hidden; }
+    .detail-image img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-eyebrow { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .detail-title { font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--fg); line-height: 1.15; }
+    .detail-price { font-size: 2rem; font-weight: 300; color: var(--fg); margin-top: 0.5rem; }
+    .sep { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    .detail-desc { color: var(--muted-fg); line-height: 1.85; }
+    .qty-ctrl { display: flex; align-items: center; overflow: hidden; border: 1px solid var(--border-strong); border-radius: var(--radius); width: fit-content; }
+    .qty-ctrl button { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: var(--transition); }
+    .qty-ctrl button:hover { background: var(--muted); }
+    .qty-ctrl button svg { width: 12px; height: 12px; }
+    .qty-ctrl span { min-width: 3rem; text-align: center; font-size: 0.9rem; font-weight: 500; padding: 0 0.5rem; }
+    .detail-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+    .detail-actions .btn { flex: 1; min-width: 140px; justify-content: center; }
+
+    /* CART */
+    .cart-layout { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; align-items: start; }
+    @media (max-width: 1023px) { .cart-layout { grid-template-columns: 1fr; } }
+    .cart-item { display: flex; gap: 1.25rem; padding: 1.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
+    .cart-item-img { width: 96px; height: 96px; flex-shrink: 0; background: var(--muted); border-radius: var(--radius); overflow: hidden; cursor: pointer; }
+    .cart-item-img img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+    .cart-item-img:hover img { transform: scale(1.05); }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-collection { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted-fg); margin-bottom: 0.2rem; }
+    .cart-item-name { font-family: 'Fraunces', serif; font-size: 1.05rem; color: var(--fg); cursor: pointer; transition: var(--transition); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cart-item-name:hover { color: var(--gold); }
+    .cart-item-price { font-weight: 500; color: var(--gold); font-size: 0.9rem; margin-top: 0.25rem; }
+    .cart-item-controls { display: flex; align-items: center; gap: 1rem; margin-top: 0.75rem; }
+    .qty-ctrl-sm { display: flex; align-items: center; border: 1px solid var(--border-strong); border-radius: var(--radius); overflow: hidden; }
+    .qty-ctrl-sm button { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: var(--transition); }
+    .qty-ctrl-sm button:hover { background: var(--muted); }
+    .qty-ctrl-sm button svg { width: 11px; height: 11px; }
+    .qty-ctrl-sm span { min-width: 2rem; text-align: center; font-size: 0.85rem; }
+    .delete-btn { color: var(--muted-fg); transition: var(--transition); display: flex; align-items: center; }
+    .delete-btn:hover { color: var(--destructive); }
+    .delete-btn svg { width: 16px; height: 16px; }
+    .cart-item-total { text-align: right; flex-shrink: 0; font-weight: 500; color: var(--fg); font-size: 0.95rem; padding-top: 2px; }
+    .cart-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; }
+    .cart-meta a, .cart-meta button { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-fg); transition: var(--transition); display: inline-flex; align-items: center; gap: 0.35rem; }
+    .cart-meta a:hover { color: var(--gold); }
+    .cart-meta button:hover { color: var(--destructive); }
+    .cart-meta svg { width: 12px; height: 12px; }
+    .order-summary { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; position: sticky; top: 84px; }
+    .order-summary h2 { font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--fg); margin-bottom: 1rem; }
+    .summary-line { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.6rem; }
+    .summary-line span:first-child { color: var(--muted-fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65%; }
+    .summary-line span:last-child { font-weight: 500; color: var(--fg); flex-shrink: 0; }
+    .summary-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .summary-total span:first-child { font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; }
+    .summary-total span:last-child { font-size: 1.4rem; font-weight: 500; }
+    .summary-note { font-size: 0.72rem; color: var(--muted-fg); text-align: center; margin-top: 0.75rem; line-height: 1.6; }
+    .cart-empty { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 1.5rem; }
+    .cart-empty-icon { opacity: 0.3; color: var(--muted-fg); margin-bottom: 1.5rem; }
+    .cart-empty-icon svg { width: 64px; height: 64px; }
+    .cart-empty h2 { font-family: 'Fraunces', serif; font-size: 2rem; margin-bottom: 0.75rem; }
+    .cart-empty p { color: var(--muted-fg); max-width: 300px; margin: 0 auto 2rem; }
+
+    /* ABOUT */
+    .about-hero { background: var(--card); border-bottom: 1px solid var(--border); padding: 6rem 0; text-align: center; }
+    .about-hero-inner { max-width: 560px; margin: 0 auto; }
+    .about-hero h1 { font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 7vw, 4rem); color: var(--fg); line-height: 1.1; margin: 1rem 0; }
+    .about-hero p { color: var(--muted-fg); line-height: 1.75; }
+    .stats-section { background: rgba(244,244,244,0.4); border-bottom: 1px solid var(--border); padding: 3rem 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; }
+    @media (max-width: 767px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 2.5rem; color: var(--gold); margin-bottom: 0.35rem; }
+    .stat-label { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-fg); }
+    .narrative-section { padding: 6rem 0; }
+    .narrative-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    @media (max-width: 767px) { .narrative-grid { grid-template-columns: 1fr; } }
+    .narrative-img { aspect-ratio: 4/5; background: var(--muted); border-radius: var(--radius); overflow: hidden; }
+    .narrative-img img { width: 100%; height: 100%; object-fit: cover; }
+    .sep-short { border: none; border-top: 1px solid var(--border); width: 64px; margin: 1.5rem 0; }
+    .narrative-text h2 { font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 3.5vw, 2.5rem); color: var(--fg); margin: 0.75rem 0; }
+    .narrative-para { color: var(--muted-fg); line-height: 1.85; margin-bottom: 1rem; }
+    .values-section { background: rgba(244,244,244,0.4); border-top: 1px solid var(--border); padding: 6rem 0; }
+    .values-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    @media (max-width: 767px) { .values-grid { grid-template-columns: 1fr; } }
+    .value-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+    .value-card h3 { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--fg); margin-bottom: 1rem; }
+    .value-card p { color: var(--muted-fg); line-height: 1.75; font-size: 0.9rem; }
+
+    /* FOOTER */
+    #site-footer { background: var(--card); border-top: 1px solid var(--border); }
+    .footer-inner { padding: 3rem 0; }
+    .footer-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .footer-brand { font-family: 'Fraunces', serif; font-size: 1.1rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--fg); }
+    .footer-nav { display: flex; align-items: center; gap: 2rem; }
+    .footer-nav a { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted-fg); transition: var(--transition); }
+    .footer-nav a:hover { color: var(--gold); }
+    .footer-sep { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 2rem 0; }
+    .footer-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; font-size: 0.72rem; color: var(--muted-fg); }
+    .footer-bottom a { transition: var(--transition); }
+    .footer-bottom a:hover { color: var(--gold); }
+
+    /* UTILITY */
+    .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+    .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+    .mt-12 { margin-top: 3rem; }
+    .text-center { text-align: center; }
+    .empty-state { text-align: center; padding: 6rem 1.5rem; }
+    .empty-state h2 { font-family: 'Fraunces', serif; font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .empty-state p { color: var(--muted-fg); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    @media (max-width: 767px) { .pillars-grid { grid-template-columns: 1fr; gap: 2.5rem; } .search-wrap { max-width: 100%; } .filters-inner { flex-direction: column; align-items: flex-start; } }
+  </style>
+</head>
+
+<body>
+
+<div id="toast-container" aria-live="polite"></div>
+
+<!-- HEADER -->
+<header id="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="#" class="logo" onclick="navigate('home'); return false;">Maison Temporel</a>
+      <nav class="desktop-nav">
+        <a href="#" id="nav-collections" onclick="navigate('catalog'); return false;">Collections</a>
+        <a href="#" id="nav-about" onclick="navigate('about'); return false;">About</a>
+      </nav>
+      <div class="header-actions">
+        <button class="cart-btn" onclick="navigate('cart')" aria-label="View cart">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"/></svg>
+          <span class="cart-badge" id="cart-badge" data-count="0">0</span>
+        </button>
+        <button class="mobile-menu-btn" id="mobile-toggle" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+          <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+          <svg id="icon-close" style="display:none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="#" onclick="navigate('catalog'); toggleMobileMenu(); return false;">Collections</a>
+    <a href="#" onclick="navigate('about'); toggleMobileMenu(); return false;">About</a>
+    <a href="#" onclick="navigate('cart'); toggleMobileMenu(); return false;">Cart</a>
+  </nav>
+</header>
+
+<!-- PAGE: HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">The Art of Time</p>
+      <h1 class="hero-title font-display">Maison<br>Temporel</h1>
+      <p class="hero-subtitle">Where precision meets poetry. Timepieces crafted for those who understand that every second is a luxury.</p>
+      <button class="btn btn-outline-white btn-lg" onclick="navigate('catalog')">
+        Explore Collections
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+      </button>
+    </div>
+    <div class="hero-fade"></div>
+  </section>
+  <section class="collections-strip">
+    <div class="container"><div class="inner" id="home-collections-strip"></div></div>
+  </section>
+  <section class="py-24" style="background:var(--bg)">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow">New Arrivals</p>
+        <h2 class="section-title font-display">Featured Timepieces</h2>
+      </div>
+      <div class="products-grid" id="home-featured-grid"></div>
+      <div class="text-center mt-12">
+        <button class="btn btn-outline" onclick="navigate('catalog')">
+          View All Collections
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+  <section class="pillars-section">
+    <div class="container">
+      <div class="pillars-grid">
+        <div class="pillar">
+          <div class="pillar-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+          <h3 class="pillar-title font-display">Heritage Craft</h3>
+          <p class="pillar-desc">Over a century of watchmaking tradition distilled into every movement.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"/></svg></div>
+          <h3 class="pillar-title font-display">Rare Materials</h3>
+          <p class="pillar-desc">Only the finest sapphire crystal, Swiss movements, and precious metals.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg></div>
+          <h3 class="pillar-title font-display">Lifetime Warranty</h3>
+          <p class="pillar-desc">Every Maison Temporel piece is warranted for life against defects.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- PAGE: CATALOG -->
+<div class="page" id="page-catalog">
+  <section class="page-header">
+    <div class="container">
+      <p class="section-eyebrow">Our Atelier</p>
+      <h1 class="font-display" style="font-size:clamp(2rem,5vw,3rem);color:var(--fg)">Collections</h1>
+    </div>
+  </section>
+  <div class="filters-bar">
+    <div class="container">
+      <div class="filters-inner">
+        <div class="filter-tabs" id="catalog-filter-tabs"></div>
+        <div class="search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+          <input class="search-input" id="catalog-search" type="search" placeholder="Search timepieces..." oninput="renderCatalog()" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="py-12">
+    <div class="container"><div id="catalog-grid"></div></div>
+  </section>
+</div>
+
+<!-- PAGE: PRODUCT DETAIL -->
+<div class="page" id="page-detail">
+  <div class="breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-inner">
+        <a href="#" onclick="navigate('home');return false;">Home</a><span>/</span>
+        <a href="#" onclick="navigate('catalog');return false;">Collections</a><span>/</span>
+        <span class="current" id="detail-breadcrumb-name">—</span>
+      </div>
+    </div>
+  </div>
+  <div class="container py-24" id="detail-content"></div>
+</div>
+
+<!-- PAGE: CART -->
+<div class="page" id="page-cart">
+  <section class="page-header">
+    <div class="container">
+      <p class="section-eyebrow">Your Selection</p>
+      <h1 class="font-display" style="font-size:clamp(2rem,5vw,3rem);color:var(--fg)">Cart</h1>
+    </div>
+  </section>
+  <div class="container py-12" id="cart-content"></div>
+</div>
+
+<!-- PAGE: ABOUT -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="about-hero-inner">
+        <p class="section-eyebrow">Our Story</p>
+        <h1>The Art of<br>Time</h1>
+        <p>Born from passion. Refined by decades of mastery. Maison Temporel stands as a testament to what is possible when artistry meets precision.</p>
+      </div>
+    </div>
+  </section>
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div><p class="stat-value font-display">1891</p><p class="stat-label">Founded</p></div>
+        <div><p class="stat-value font-display">12+</p><p class="stat-label">Collections</p></div>
+        <div><p class="stat-value font-display">47</p><p class="stat-label">Craftspeople</p></div>
+        <div><p class="stat-value font-display">60+</p><p class="stat-label">Countries</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="narrative-section">
+    <div class="container">
+      <div class="narrative-grid">
+        <div class="narrative-img">
+          <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=800&q=80" alt="Master watchmaker at work" />
+        </div>
+        <div class="narrative-text">
+          <p class="section-eyebrow">Our Philosophy</p>
+          <h2>More Than Precision</h2>
+          <hr class="sep-short" />
+          <p class="narrative-para">At the heart of every timepiece lies more than precision—it carries a story of heritage, artistry, and innovation. Our watch brand was founded on the belief that true luxury is timeless, defined not only by design but by the dedication behind every detail.</p>
+          <p class="narrative-para">From the careful selection of materials to the mastery of craftsmanship, each watch reflects a commitment to excellence. We blend classic elegance with modern innovation, creating pieces that are not just instruments of time, but symbols of style, legacy, and individuality.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="values-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow">What Drives Us</p>
+        <h2 class="section-title font-display">Our Core Values</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-card"><h3 class="font-display">Heritage</h3><p>More than a century of horological mastery flows through every component we produce. Our roots are our compass.</p></div>
+        <div class="value-card"><h3 class="font-display">Artistry</h3><p>Each piece is a canvas. Our master watchmakers dedicate hundreds of hours to movements invisible to the eye.</p></div>
+        <div class="value-card"><h3 class="font-display">Innovation</h3><p>We honour tradition while embracing the future — developing proprietary complications that define a new standard.</p></div>
+        <div class="value-card"><h3 class="font-display">Excellence</h3><p>From the raw materials sourced across three continents to the final polish, we refuse compromise at every stage.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer id="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-brand">Maison Temporel</span>
+        <nav class="footer-nav">
+          <a href="#" onclick="navigate('catalog');return false;">Collections</a>
+          <a href="#" onclick="navigate('about');return false;">About</a>
+          <a href="#" onclick="navigate('cart');return false;">Cart</a>
+        </nav>
+      </div>
+      <hr class="footer-sep" />
+      <div class="footer-bottom">
+        <p id="footer-year"></p>
+        <p>Built with <a href="https://caffeine.ai" target="_blank" rel="noopener">caffeine.ai</a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+const PRODUCTS = [
+  { id:1, name:"Chronographe Céleste", description:"A masterpiece of precision engineering, featuring a 42mm rose gold case and sapphire crystal dial.", price:12500, collection:"La Collection Classique", imageUrl:"https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=600&q=80", inStock:true },
+  { id:2, name:"Montre Lumière Perpétuelle", description:"Ultra-thin minimalist design with a pure white lacquer dial and platinum indices.", price:9800, collection:"La Collection Classique", imageUrl:"https://images.unsplash.com/photo-1612817288484-6f916006741a?w=600&q=80", inStock:true },
+  { id:3, name:"Tourbillon Nocturne", description:"Hand-wound flying tourbillon with a midnight blue enamel dial and guilloché texture.", price:42000, collection:"La Collection Haute Horlogerie", imageUrl:"https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=600&q=80", inStock:true },
+  { id:4, name:"Grande Complication Soleil", description:"A grand complication featuring perpetual calendar, moon phase, and minute repeater.", price:68000, collection:"La Collection Haute Horlogerie", imageUrl:"https://images.unsplash.com/photo-1606744888344-493238951221?w=600&q=80", inStock:false },
+  { id:5, name:"Aquaterre Profond", description:"Professional diver's timepiece with 300m water resistance and ceramic bezel.", price:7200, collection:"La Collection Sport", imageUrl:"https://images.unsplash.com/photo-1548171915-f9cac733e4d1?w=600&q=80", inStock:true },
+  { id:6, name:"Chronos Aviateur", description:"Pilot's chronograph with slide rule bezel, 44mm steel case and anti-reflective crystal.", price:8400, collection:"La Collection Sport", imageUrl:"https://images.unsplash.com/photo-1595520407624-0970dc9c9d60?w=600&q=80", inStock:true },
+];
+
+const COLLECTIONS = ["La Collection Classique","La Collection Haute Horlogerie","La Collection Sport"];
+
+let cart = {};
+let activeCollection = 'all';
+let _detailQty = 1;
+
+function cartCount() { return Object.values(cart).reduce((s,q)=>s+q,0); }
+function cartTotal() { return Object.entries(cart).reduce((s,[id,qty])=>{ const p=PRODUCTS.find(p=>p.id===+id); return s+(p?p.price*qty:0); },0); }
+function addToCart(id,qty=1){ cart[id]=(cart[id]||0)+qty; updateCartBadge(); }
+function removeFromCart(id){ delete cart[id]; updateCartBadge(); }
+function updateQuantity(id,qty){ if(qty<=0) removeFromCart(id); else { cart[id]=qty; updateCartBadge(); } }
+function clearCart(){ cart={}; updateCartBadge(); }
+function updateCartBadge(){ const b=document.getElementById('cart-badge'),c=cartCount(); b.textContent=c>99?'99+':c; b.setAttribute('data-count',c); }
+
+function navigate(page,productId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav.desktop-nav a').forEach(a=>a.classList.remove('active'));
+  if(page==='catalog'||page==='detail'){ const e=document.getElementById('nav-collections'); if(e) e.classList.add('active'); }
+  else if(page==='about'){ const e=document.getElementById('nav-about'); if(e) e.classList.add('active'); }
+  if(page==='detail'&&productId){ renderDetail(productId); document.getElementById('page-detail').classList.add('active'); }
+  else if(page==='catalog'){ renderCatalogFilters(); renderCatalog(); document.getElementById('page-catalog').classList.add('active'); }
+  else if(page==='cart'){ renderCart(); document.getElementById('page-cart').classList.add('active'); }
+  else if(page==='about'){ document.getElementById('page-about').classList.add('active'); }
+  else { renderHome(); document.getElementById('page-home').classList.add('active'); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(msg,type='success'){
+  const c=document.getElementById('toast-container'),t=document.createElement('div');
+  t.className='toast'+(type!=='success'?' '+type:''); t.textContent=msg; c.appendChild(t);
+  setTimeout(()=>{ t.style.animation='fadeOut 0.3s ease forwards'; setTimeout(()=>t.remove(),300); },3000);
+}
+
+function fmtPrice(n){ return '$'+n.toLocaleString('en-US'); }
+
+function productCardHTML(product){
+  const btn=product.inStock
+    ? `<button class="btn btn-outline btn-sm" onclick="handleAddToCart(${product.id},event)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:12px;height:12px"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"/></svg>Add</button>`
+    : `<span class="badge-sold-out">Sold Out</span>`;
+  return `<div class="product-card"><div class="product-card-img" onclick="navigate('detail',${product.id})"><img src="${product.imageUrl}" alt="${product.name}" loading="lazy"/></div><div class="product-card-body"><p class="product-collection">${product.collection}</p><h3 class="product-name font-display" onclick="navigate('detail',${product.id})">${product.name}</h3><p class="product-desc">${product.description}</p><div class="product-footer"><span class="product-price">${fmtPrice(product.price)}</span>${btn}</div></div></div>`;
+}
+
+function handleAddToCart(id,e){ if(e) e.stopPropagation(); const p=PRODUCTS.find(p=>p.id===id); if(!p) return; addToCart(id,1); showToast(`${p.name} added to cart`); }
+
+function renderHome(){
+  document.getElementById('home-collections-strip').innerHTML=COLLECTIONS.map(c=>`<a href="#" onclick="navigate('catalog');activeCollection='${c}';renderCatalogFilters();renderCatalog();return false;">${c}</a>`).join('');
+  document.getElementById('home-featured-grid').innerHTML=PRODUCTS.slice(0,3).map(p=>productCardHTML(p)).join('');
+}
+
+function renderCatalogFilters(){
+  const all=[{id:'all',label:'All'},...COLLECTIONS.map(c=>({id:c,label:c}))];
+  document.getElementById('catalog-filter-tabs').innerHTML=all.map(t=>`<button class="filter-tab${activeCollection===t.id?' active':''}" onclick="setCollection('${t.id}')">${t.label}</button>`).join('');
+}
+
+function setCollection(col){ activeCollection=col; renderCatalogFilters(); renderCatalog(); }
+
+function renderCatalog(){
+  const search=(document.getElementById('catalog-search')?.value||'').toLowerCase().trim();
+  const filtered=PRODUCTS.filter(p=>{ const ms=!search||p.name.toLowerCase().includes(search)||p.collection.toLowerCase().includes(search)||p.description.toLowerCase().includes(search); const mc=activeCollection==='all'||p.collection===activeCollection; return ms&&mc; });
+  const g=document.getElementById('catalog-grid');
+  if(!filtered.length){ g.innerHTML=`<div class="empty-state"><h2 class="font-display">No timepieces found</h2><p>Try adjusting your search or filter</p><button class="btn btn-outline" onclick="clearFilters()">Clear Filters</button></div>`; return; }
+  g.innerHTML=`<div class="products-grid">${filtered.map(p=>productCardHTML(p)).join('')}</div>`;
+}
+
+function clearFilters(){ activeCollection='all'; document.getElementById('catalog-search').value=''; renderCatalogFilters(); renderCatalog(); }
+
+function renderDetail(productId){
+  const p=PRODUCTS.find(x=>x.id===productId);
+  const bc=document.getElementById('detail-breadcrumb-name');
+  const c=document.getElementById('detail-content');
+  if(!p){ bc.textContent='Not Found'; c.innerHTML=`<div class="empty-state"><h2 class="font-display">Timepiece Not Found</h2><p>This piece may no longer be available.</p><button class="btn btn-outline" onclick="navigate('catalog')">Back to Collections</button></div>`; return; }
+  bc.textContent=p.name;
+  const inCart=cart[p.id]||0;
+  _detailQty=inCart>0?inCart:1;
+  let actions;
+  if(!p.inStock){
+    actions=`<p style="color:var(--muted-fg);font-style:italic;font-size:0.9rem">This piece is currently sold out. Please check back or explore other collections.</p>`;
+  } else {
+    actions=`<div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;"><span style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted-fg)">${inCart>0?'In Cart:':'Quantity:'}</span><div class="qty-ctrl" id="detail-qty-ctrl"><button onclick="detailQtyDec(${p.id})" aria-label="Decrease"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg></button><span id="detail-qty-display">${_detailQty}</span><button onclick="detailQtyInc(${p.id})" aria-label="Increase"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button></div></div><div class="detail-actions"><button class="btn btn-solid btn-lg" onclick="detailAddToCart(${p.id})">Add to Cart</button>${inCart>0?`<button class="btn btn-outline btn-lg" onclick="navigate('cart')">View Cart (${inCart})</button>`:''}</div>`;
+  }
+  c.innerHTML=`<div class="detail-grid"><div class="detail-image"><img src="${p.imageUrl}" alt="${p.name}"/></div><div><div class="detail-eyebrow">${p.collection}</div><h1 class="detail-title font-display">${p.name}</h1><div style="display:flex;align-items:center;gap:1rem;margin-top:0.75rem;flex-wrap:wrap;"><span class="detail-price">${fmtPrice(p.price)}</span>${!p.inStock?'<span class="badge-sold-out">Sold Out</span>':''}</div><hr class="sep"/><p class="detail-desc">${p.description}</p><hr class="sep"/>${actions}<div style="margin-top:1.5rem"><a href="#" onclick="navigate('catalog');return false;" style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted-fg);display:inline-flex;align-items:center;gap:0.4rem;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted-fg)'">← Back to Collections</a></div></div></div>`;
+}
+
+function detailQtyDec(id){ const inCart=cart[id]||0; if(inCart>0){ updateQuantity(id,inCart-1); renderDetail(id); } else { _detailQty=Math.max(1,_detailQty-1); const e=document.getElementById('detail-qty-display'); if(e) e.textContent=_detailQty; } }
+function detailQtyInc(id){ const inCart=cart[id]||0; if(inCart>0){ updateQuantity(id,inCart+1); renderDetail(id); } else { _detailQty++; const e=document.getElementById('detail-qty-display'); if(e) e.textContent=_detailQty; } }
+function detailAddToCart(id){ const p=PRODUCTS.find(x=>x.id===id); if(!p) return; addToCart(id,_detailQty); _detailQty=1; showToast(`${p.name} added to cart`); renderDetail(id); }
+
+function renderCart(){
+  const c=document.getElementById('cart-content'),count=cartCount();
+  if(!count){ c.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"/></svg></div><h2 class="font-display">Your Cart is Empty</h2><p>Explore our collections and find a timepiece that speaks to your sense of elegance.</p><button class="btn btn-solid btn-lg" onclick="navigate('catalog')">Explore Collections</button></div>`; return; }
+  const items=Object.entries(cart).map(([id,qty])=>{ const p=PRODUCTS.find(x=>x.id===+id); if(!p) return ''; return `<div class="cart-item"><div class="cart-item-img" onclick="navigate('detail',${p.id})"><img src="${p.imageUrl}" alt="${p.name}" loading="lazy"/></div><div class="cart-item-info"><p class="cart-item-collection">${p.collection}</p><p class="cart-item-name font-display" onclick="navigate('detail',${p.id})">${p.name}</p><p class="cart-item-price">${fmtPrice(p.price)}</p><div class="cart-item-controls"><div class="qty-ctrl-sm"><button onclick="cartUpdateQty(${p.id},${qty-1})" aria-label="Decrease"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg></button><span>${qty}</span><button onclick="cartUpdateQty(${p.id},${qty+1})" aria-label="Increase"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button></div><button class="delete-btn" onclick="cartRemove(${p.id},'${p.name.replace(/'/g,"\\'")}')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/></svg></button></div></div><div class="cart-item-total">${fmtPrice(p.price*qty)}</div></div>`; }).join('');
+  const summary=Object.entries(cart).map(([id,qty])=>{ const p=PRODUCTS.find(x=>x.id===+id); if(!p) return ''; return `<div class="summary-line"><span>${p.name} ×${qty}</span><span>${fmtPrice(p.price*qty)}</span></div>`; }).join('');
+  c.innerHTML=`<div class="cart-layout"><div>${items}<div class="cart-meta"><a href="#" onclick="navigate('catalog');return false;">← Continue Shopping</a><button onclick="handleClearCart()">Clear Cart</button></div></div><div class="order-summary"><h2 class="font-display">Order Summary</h2><hr class="sep" style="margin:0.75rem 0"/>${summary}<div class="summary-total"><span>Total</span><span>${fmtPrice(cartTotal())}</span></div><button class="btn btn-solid btn-lg" style="width:100%;margin-top:1rem;justify-content:center" onclick="showToast('Checkout coming soon — our atelier is preparing the experience.','info')">Proceed to Checkout</button><p class="summary-note">Complimentary shipping on all orders. Secure, discreet packaging.</p></div></div>`;
+}
+
+function cartUpdateQty(id,qty){ updateQuantity(id,qty); renderCart(); }
+function cartRemove(id,name){ removeFromCart(id); showToast(`${name} removed from cart`); renderCart(); }
+function handleClearCart(){ clearCart(); showToast('Cart cleared'); renderCart(); }
+
+function toggleMobileMenu(){
+  const nav=document.getElementById('mobile-nav'),open=nav.classList.toggle('open');
+  document.getElementById('icon-menu').style.display=open?'none':'';
+  document.getElementById('icon-close').style.display=open?'':'none';
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('footer-year').textContent=`© ${new Date().getFullYear()} Maison Temporel. All rights reserved.`;
+  renderHome();
+  navigate('home');
+});
+</script>
+
+</body>
+</html>
