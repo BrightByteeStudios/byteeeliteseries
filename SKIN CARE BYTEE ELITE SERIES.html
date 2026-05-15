@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMIÈRE BOTANICALS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F4ECDD;
+      --card: #EFE3CF;
+      --charcoal: #2A2320;
+	  --taupe: #8C7B6B;
+      --sand: #D9CBB6;
+      --beige: #E6D6BD;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-ui: 'Jost', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--charcoal);
+      font-family: var(--font-ui);
+    }
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: var(--font-ui); }
+	}
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: var(--font-ui); }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--sand);
+      transition: box-shadow 0.3s;
+    }
+    header.scrolled { box-shadow: 0 2px 16px rgba(42,35,32,0.08); }
+    .header-top {
+      max-width: 1280px; margin: 0 auto; padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-spacer { flex: 1; }
+    .logo-wrap { text-align: center; flex: none; }
+    .logo-name {
+      font-family: var(--font-display); font-size: 1.875rem; font-weight: 300;
+      letter-spacing: 0.25em; text-transform: uppercase; color: var(--charcoal);
+    }
+    .logo-sub {
+      font-size: 0.625rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--taupe); margin-top: 2px;
+    }
+    .header-icons {
+      flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 20px;
+    }
+    .header-icons button { color: var(--charcoal); transition: color 0.2s; position: relative; }
+    .header-icons button:hover { color: var(--taupe); }
+    .cart-badge {
+      position: absolute; top: -6px; right: -8px;
+      background: var(--charcoal); color: var(--bg);
+      font-size: 9px; width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .header-nav {
+      border-top: 1px solid var(--sand);
+    }
+    .header-nav nav {
+      max-width: 1280px; margin: 0 auto; padding: 12px 24px;
+      display: flex; justify-content: center; gap: 40px;
+    }
+    .header-nav a {
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--charcoal); transition: color 0.2s;
+    }
+    .header-nav a:hover { color: var(--taupe); }
+
+    /* ── HERO ── */
+    #shop {
+      padding-top: 128px; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 24px; width: 100%;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; align-items: center; min-height: 80vh;
+    }
+    .hero-text { padding: 64px 32px 64px 0; }
+    .hero-eyebrow {
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--taupe); margin-bottom: 24px;
+    }
+    .hero-headline {
+      font-family: var(--font-display); font-size: clamp(3rem, 6vw, 4.5rem);
+      font-weight: 300; color: var(--charcoal); line-height: 1.05;
+      text-transform: uppercase; margin-bottom: 32px;
+    }
+    .hero-headline em { font-style: italic; }
+    .hero-body {
+      font-size: 0.875rem; color: var(--taupe); line-height: 1.75;
+      margin-bottom: 40px; max-width: 360px;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 14px 32px; background: var(--charcoal); color: var(--bg);
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.8; }
+    .btn-outline {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 14px 32px; border: 1px solid var(--charcoal); color: var(--charcoal);
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { background: var(--charcoal); color: var(--bg); }
+    .hero-image {
+      height: 85vh; overflow: hidden; position: relative;
+    }
+    .hero-image img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero-image::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to left, transparent, rgba(244,236,221,0.2));
+    }
+
+    /* ── SECTION SHARED ── */
+    .section { padding: 80px 0; border-top: 1px solid var(--sand); }
+    .section-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    .section-header { text-align: center; margin-bottom: 56px; }
+    .section-eyebrow {
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--taupe); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: 2.25rem; font-weight: 300;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--charcoal);
+    }
+
+    /* ── PRODUCTS ── */
+    .products-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    }
+    .product-card { display: flex; flex-direction: column; }
+    .product-img {
+      aspect-ratio: 1; overflow: hidden; background: var(--card); margin-bottom: 16px;
+    }
+    .product-img img { transition: transform 0.7s ease; }
+    .product-card:hover .product-img img { transform: scale(1.05); }
+    .product-cat {
+      font-size: 0.625rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--taupe); margin-bottom: 4px;
+    }
+    .product-name {
+      font-family: var(--font-display); font-size: 1.125rem;
+      color: var(--charcoal); line-height: 1.3; margin-bottom: 4px;
+    }
+    .product-price { font-size: 0.875rem; color: var(--taupe); margin-bottom: 8px; }
+    .product-stars { display: flex; align-items: center; gap: 6px; }
+    .stars { display: flex; gap: 2px; }
+    .star {
+      width: 11px; height: 11px;
+      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+    }
+    .star.filled { background: var(--charcoal); }
+    .star.empty { background: var(--sand); }
+    .star-text { font-size: 0.75rem; color: var(--taupe); }
+    .btn-bag {
+      margin-top: 16px; width: 100%; padding: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      background: var(--beige); color: var(--charcoal); transition: background 0.2s;
+    }
+    .btn-bag:hover { background: #D9C8A8; }
+
+    /* ── HERITAGE ── */
+    .heritage { background: var(--card); }
+    .heritage-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    }
+    .heritage-images { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .heritage-img-1 { aspect-ratio: 1; overflow: hidden; }
+    .heritage-img-2 { aspect-ratio: 1; overflow: hidden; margin-top: 32px; }
+    .heritage-text { padding-left: 32px; }
+    .heritage-eyebrow {
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--taupe); margin-bottom: 16px;
+    }
+    .heritage-title {
+      font-family: var(--font-display); font-size: 2.25rem; font-weight: 300;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--charcoal);
+      margin-bottom: 24px;
+    }
+    .heritage-rule { width: 32px; height: 1px; background: var(--sand); margin-bottom: 32px; }
+    .heritage-body { font-size: 0.875rem; color: var(--taupe); line-height: 1.75; }
+    .heritage-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 32px; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--charcoal); border-bottom: 1px solid var(--charcoal);
+      padding-bottom: 2px; transition: color 0.2s, border-color 0.2s;
+    }
+    .heritage-link:hover { color: var(--taupe); border-color: var(--taupe); }
+
+    /* ── INGREDIENTS ── */
+    .ingredients-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--sand); divide: var(--sand);
+    }
+    .ingredient-card {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      padding: 40px 32px; border-right: 1px solid var(--sand);
+    }
+    .ingredient-card:last-child { border-right: none; }
+    .ingredient-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--bg); border: 1px solid var(--sand);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin-bottom: 24px;
+    }
+    .ingredient-name {
+      font-family: var(--font-display); font-size: 1.25rem;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    .ingredient-desc { font-size: 0.75rem; color: var(--taupe); line-height: 1.6; margin-bottom: 12px; }
+    .ingredient-benefit {
+      font-size: 0.75rem; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--charcoal);
+    }
+
+    /* ── CTA BAND ── */
+    .cta-band { border-top: 1px solid var(--sand); }
+    .cta-grid {
+      max-width: 1280px; margin: 0 auto; padding: 0 24px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+    }
+    .cta-col { padding: 64px 0; }
+    .cta-col:nth-child(1) { padding-right: 32px; border-right: 1px solid var(--sand); }
+    .cta-col:nth-child(2) {
+      padding-left: 32px; padding-right: 32px;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      border-right: 1px solid var(--sand);
+    }
+    .cta-col:nth-child(3) { padding-left: 32px; }
+    .cta-explore-label {
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--taupe); margin-bottom: 24px;
+    }
+    .cta-links a {
+      display: block; font-family: var(--font-display); font-size: 1.5rem; font-weight: 300;
+      color: var(--charcoal); margin-bottom: 8px; transition: color 0.2s;
+    }
+    .cta-links a:hover { color: var(--taupe); }
+    .cta-headline {
+      font-family: var(--font-display); font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 300; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--charcoal); line-height: 1.15; margin-bottom: 16px;
+    }
+    .cta-headline em { font-style: italic; }
+    .cta-subtext { font-size: 0.875rem; color: var(--taupe); line-height: 1.7; }
+    .nl-label {
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--taupe); margin-bottom: 8px;
+    }
+    .nl-title {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 300;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--charcoal);
+      margin-bottom: 16px;
+    }
+    .nl-body { font-size: 0.75rem; color: var(--taupe); line-height: 1.7; margin-bottom: 24px; }
+    .nl-form { display: flex; }
+    .nl-form input {
+      flex: 1; padding: 10px 12px; border: 1px solid var(--sand);
+      background: var(--bg); font-family: var(--font-ui); font-size: 0.75rem;
+      color: var(--charcoal); outline: none; border-right: none;
+    }
+    .nl-form input::placeholder { color: var(--taupe); }
+    .nl-form input:focus { border-color: var(--charcoal); }
+    .nl-form button {
+      padding: 10px 20px; background: #2A2320; color: #F4ECDD;
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      white-space: nowrap; transition: opacity 0.2s;
+    }
+    .nl-form button:hover { opacity: 0.8; }
+    .nl-success {
+      padding: 16px; text-align: center; border: 1px solid var(--sand);
+    }
+    .nl-success p {
+      font-family: var(--font-display); font-size: 1.125rem;
+      color: var(--charcoal); font-style: italic;
+    }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--sand); background: var(--card); }
+    .footer-inner { max-width: 1280px; margin: 0 auto; padding: 56px 24px; }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 48px;
+    }
+    .footer-logo-name {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 300;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--charcoal);
+    }
+    .footer-logo-sub {
+      font-size: 0.625rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--taupe); margin-bottom: 16px;
+    }
+    .footer-tagline { font-size: 0.75rem; color: var(--taupe); line-height: 1.7; }
+    .footer-col-title {
+      font-size: 0.625rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--charcoal); margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col button {
+      font-size: 0.75rem; color: var(--taupe); transition: color 0.2s;
+    }
+    .footer-col button:hover { color: var(--charcoal); }
+    .footer-bottom {
+      border-top: 1px solid var(--sand); padding-top: 32px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-socials { display: flex; align-items: center; gap: 16px; }
+    .footer-socials button {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid var(--sand); display: flex; align-items: center; justify-content: center;
+      color: var(--taupe); font-size: 0.75rem; transition: color 0.2s, border-color 0.2s;
+    }
+    .footer-socials button:hover { color: var(--charcoal); border-color: var(--charcoal); }
+    .footer-copy { font-size: 0.75rem; color: var(--taupe); text-align: center; }
+    .footer-copy a { text-decoration: underline; transition: color 0.2s; }
+    .footer-copy a:hover { color: var(--charcoal); }
+    .footer-cards { display: flex; gap: 8px; }
+    .footer-card {
+      font-size: 9px; padding: 4px 8px; border: 1px solid var(--sand); color: var(--taupe);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-image { height: 50vh; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .heritage-grid { grid-template-columns: 1fr; }
+      .heritage-text { padding-left: 0; }
+      .cta-grid { grid-template-columns: 1fr; }
+      .cta-col:nth-child(1), .cta-col:nth-child(2) { border-right: none; border-bottom: 1px solid var(--sand); }
+      .cta-col:nth-child(1), .cta-col:nth-child(2), .cta-col:nth-child(3) { padding-left: 0; padding-right: 0; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .hero-headline { font-size: 2.5rem; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .ingredients-grid { grid-template-columns: 1fr; }
+      .ingredient-card { border-right: none; border-bottom: 1px solid var(--sand); }
+      .ingredient-card:last-child { border-bottom: none; }
+      .footer-bottom { flex-direction: column; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="site-header">
+    <div class="header-top">
+      <div class="header-spacer"></div>
+      <div class="logo-wrap">
+        <div class="logo-name">LUMIÈRE</div>
+        <div class="logo-sub">BOTANICALS</div>
+      </div>
+      <div class="header-icons">
+        <button aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <button aria-label="Account">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button aria-label="Cart (1)" style="position:relative">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-badge">1</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-nav">
+      <nav>
+        <a href="#shop">SHOP</a>
+        <a href="#collections">COLLECTIONS</a>
+        <a href="#ingredients">INGREDIENTS</a>
+        <a href="#story">STORY</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="shop">
+      <div class="hero-inner">
+        <div class="hero-grid">
+          <div class="hero-text">
+            <p class="hero-eyebrow">New Collection — Spring 2026</p>
+            <h1 class="hero-headline">
+              RADIANCE<br>
+              <em>BEGINS</em><br>
+              WITH NATURE
+            </h1>
+            <p class="hero-body">
+              Formulated from the rarest botanical extracts, each LUMIÈRE product is a harmony of science and nature — crafted to reveal your skin's innate luminosity.
+            </p>
+            <div class="hero-btns">
+              <a href="#collections" class="btn-primary">SHOP NOW</a>
+              <a href="#story" class="btn-outline">OUR STORY</a>
+            </div>
+          </div>
+          <div class="hero-image">
+            <img
+              src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1200&q=80"
+              alt="LUMIÈRE Botanicals – radiance begins with nature"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="section" id="collections">
+      <div class="section-inner">
+        <div class="section-header">
+          <p class="section-eyebrow">— Bestsellers —</p>
+          <h2 class="section-title">CURATED ESSENTIALS</h2>
+        </div>
+        <div class="products-grid">
+          <!-- Product 1 -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&q=80" alt="Radiance Vitamin C Serum" loading="lazy" />
+            </div>
+            <p class="product-cat">Serums</p>
+            <h3 class="product-name">Radiance Vitamin C Serum</h3>
+            <p class="product-price">$89</p>
+            <div class="product-stars">
+              <div class="stars">
+                <div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star filled"></div>
+              </div>
+              <span class="star-text">4.9 (312)</span>
+            </div>
+            <button class="btn-bag">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              ADD TO BAG
+            </button>
+          </div>
+          <!-- Product 2 -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="https://images.unsplash.com/photo-1611080626919-7cf5a9dbab12?w=600&q=80" alt="Hydra-Glow Face Cream" loading="lazy" />
+            </div>
+            <p class="product-cat">Moisturisers</p>
+            <h3 class="product-name">Hydra-Glow Face Cream</h3>
+            <p class="product-price">$72</p>
+            <div class="product-stars">
+              <div class="stars">
+                <div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star filled"></div>
+              </div>
+              <span class="star-text">4.8 (245)</span>
+            </div>
+            <button class="btn-bag">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              ADD TO BAG
+            </button>
+          </div>
+          <!-- Product 3 -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="https://images.unsplash.com/photo-1617897903246-719242758050?w=600&q=80" alt="Rose Renewal Eye Elixir" loading="lazy" />
+            </div>
+            <p class="product-cat">Eye Care</p>
+            <h3 class="product-name">Rose Renewal Eye Elixir</h3>
+            <p class="product-price">$65</p>
+            <div class="product-stars">
+              <div class="stars">
+                <div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star empty"></div>
+              </div>
+              <span class="star-text">4.7 (189)</span>
+            </div>
+            <button class="btn-bag">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              ADD TO BAG
+            </button>
+          </div>
+          <!-- Product 4 -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&q=80" alt="Argan Nourish Face Oil" loading="lazy" />
+            </div>
+            <p class="product-cat">Oils</p>
+            <h3 class="product-name">Argan Nourish Face Oil</h3>
+            <p class="product-price">$95</p>
+            <div class="product-stars">
+              <div class="stars">
+                <div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star filled"></div><div class="star filled"></div>
+              </div>
+              <span class="star-text">4.9 (402)</span>
+            </div>
+            <button class="btn-bag">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              ADD TO BAG
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERITAGE -->
+    <section class="section heritage" id="story">
+      <div class="section-inner">
+        <div class="heritage-grid">
+          <div class="heritage-images">
+            <div class="heritage-img-1">
+              <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=500&q=80" alt="Our heritage" loading="lazy" />
+            </div>
+            <div class="heritage-img-2">
+              <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=500&q=80" alt="Botanical ingredients" loading="lazy" />
+            </div>
+          </div>
+          <div class="heritage-text">
+            <p class="heritage-eyebrow">Since 1998</p>
+            <h2 class="heritage-title">OUR HERITAGE</h2>
+            <div class="heritage-rule"></div>
+            <p class="heritage-body">
+              Since 1998, LUMIÈRE BOTANICALS has been a quiet revolution in luxury skincare. Founded in the botanical gardens of Grasse, France, our philosophy is simple: the most extraordinary ingredients are those given freely by nature. We source only from small, sustainable farms and work with scientists who share our reverence for the living world. Every formula is a meditation — patient, precise, and deeply considered. We believe radiance is not manufactured. It is uncovered.
+            </p>
+            <a href="#story" class="heritage-link">DISCOVER OUR STORY</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INGREDIENTS -->
+    <section class="section" id="ingredients">
+      <div class="section-inner">
+        <div class="section-header">
+          <p class="section-eyebrow">— Botanical Formulation —</p>
+          <h2 class="section-title">POWERED BY NATURE</h2>
+        </div>
+        <div class="ingredients-grid">
+          <div class="ingredient-card">
+            <div class="ingredient-icon">🌹</div>
+            <h3 class="ingredient-name">Damask Rose</h3>
+            <p class="ingredient-desc">Harvested at dawn in the Valley of Roses, Bulgaria</p>
+            <p class="ingredient-benefit">Deeply hydrates and restores radiance</p>
+          </div>
+          <div class="ingredient-card">
+            <div class="ingredient-icon">🌿</div>
+            <h3 class="ingredient-name">Argan Oil</h3>
+            <p class="ingredient-desc">Cold-pressed from hand-harvested kernels in Morocco</p>
+            <p class="ingredient-benefit">Nourishes, softens and protects skin</p>
+          </div>
+          <div class="ingredient-card">
+            <div class="ingredient-icon">🤍</div>
+            <h3 class="ingredient-name">Sea Pearl</h3>
+            <p class="ingredient-desc">Micro-milled from freshwater pearl powder</p>
+            <p class="ingredient-benefit">Brightens and evens skin tone</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BAND / NEWSLETTER -->
+    <div class="cta-band">
+      <div class="cta-grid">
+        <div class="cta-col">
+          <p class="cta-explore-label">Explore</p>
+          <div class="cta-links">
+            <a href="#ingredients">INGREDIENTS</a>
+            <a href="#story">BRAND STORY</a>
+            <a href="#collections">COLLECTIONS</a>
+            <a href="#shop">RITUALS</a>
+          </div>
+        </div>
+        <div class="cta-col">
+          <div>
+            <h2 class="cta-headline">EXPERIENCE<br><em>LUMIÈRE</em></h2>
+            <p class="cta-subtext">Discover the ritual of botanical luxury.<br>Nature's finest, refined.</p>
+          </div>
+        </div>
+        <div class="cta-col">
+          <p class="nl-label">Newsletter</p>
+          <h3 class="nl-title">JOIN OUR INSIDER LIST</h3>
+          <p class="nl-body">Seasonal rituals, exclusive formulations, and first access to new collections.</p>
+          <div class="nl-form" id="nl-form-wrap">
+            <input type="email" id="nl-email" placeholder="Your email address" required />
+            <button type="button" onclick="handleNewsletter()">SIGN UP</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo-name">LUMIÈRE</div>
+          <div class="footer-logo-sub">BOTANICALS</div>
+          <p class="footer-tagline">Luxury botanical skincare,<br>crafted with reverence for nature.</p>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Site</h4>
+          <ul>
+            <li><button>Home</button></li>
+            <li><button>About</button></li>
+            <li><button>Journal</button></li>
+            <li><button>Contact</button></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Collections</h4>
+          <ul>
+            <li><button>Serums</button></li>
+            <li><button>Moisturisers</button></li>
+            <li><button>Eye Care</button></li>
+            <li><button>Gift Sets</button></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Support</h4>
+          <ul>
+            <li><button>Shipping</button></li>
+            <li><button>Returns</button></li>
+            <li><button>FAQ</button></li>
+            <li><button>Privacy Policy</button></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-socials">
+          <button aria-label="Instagram">IG</button>
+          <button aria-label="Pinterest">PI</button>
+          <button aria-label="X">𝕏</button>
+          <button aria-label="Facebook">FB</button>
+        </div>
+        <p class="footer-copy">© 2026 LUMIÈRE BOTANICALS. Built with ♥ using <a href="https://caffeine.ai" target="_blank" rel="noopener">caffeine.ai</a></p>
+        <div class="footer-cards">
+          <span class="footer-card">VISA</span>
+          <span class="footer-card">MC</span>
+          <span class="footer-card">AMEX</span>
+          <span class="footer-card">PayPal</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky header shadow on scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Newsletter signup
+    function handleNewsletter() {
+      const input = document.getElementById('nl-email');
+      if (!input.value.trim()) return;
+      const wrap = document.getElementById('nl-form-wrap');
+      wrap.outerHTML = '<div class="nl-success"><p>Thank you for joining us.</p></div>';
+    }
+
+    // Enter key on newsletter input
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('nl-email');
+      if (input) {
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') handleNewsletter();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
